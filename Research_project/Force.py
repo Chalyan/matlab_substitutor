@@ -4,18 +4,18 @@ import numpy as np
 
 class oscillator_force:
     
-    def __init__(self, os: ho.oscillator, damping_coefficient: float):
-        self.os = os
-        self.damping_coefficient = damping_coefficient
+    def __init__(self, os: ho.oscillator, dc: float):
+        self._oscillator = os
+        self._damping_coefficient = dc
     
-    def find_solution(self, conditions, interval):
+    def find_solution(self, interval):
         
         def model(conditions, interval):
             theta1 = conditions[1]
-            theta2 = -((self.damping_coefficient/self.os.m)*conditions[1] +
-                        self.os.get_frequency()**2*conditions[0])
+            theta2 = -((self._damping_coefficient/self._oscillator._m)*conditions[1] +
+                        self._oscillator.get_frequency()**2*conditions[0])
             return [theta1, theta2]
 
-        solution = odeint(model, conditions, interval)
+        solution = odeint(model, self._oscillator.get_initial_conditions(), interval)
         return solution[:,0]
 
